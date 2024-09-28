@@ -19,6 +19,7 @@ Shader "Custom/MyFirstShader"
 
             float4 _Tint;
             sampler2D _MainTexture;
+            float4 _MainTexture_ST;
 
             struct VertexData
             {
@@ -36,13 +37,13 @@ Shader "Custom/MyFirstShader"
             {
                 Interpolators i;
                 i.position = UnityObjectToClipPos(vertexData.position);
-                i.uv = vertexData.uv;
+                i.uv = TRANSFORM_TEX(vertexData.uv, _MainTexture);
                 return i;
             }
 
             float4 MyFragmentProgram(Interpolators i) : SV_TARGET
             {
-                return float4(i.uv, 1, 1) * _Tint;
+                return tex2D(_MainTexture, i.uv) * _Tint;
             }
             
             ENDCG
